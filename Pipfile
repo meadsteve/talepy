@@ -6,8 +6,11 @@ name = "pypi"
 [packages]
 
 [dev-packages]
+
 pytest = "*"
 mypy = "*"
+"flake8" = "*"
+isort = "*"
 
 [requires]
 python_version = "3.6"

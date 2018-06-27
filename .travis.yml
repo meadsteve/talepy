@@ -4,4 +4,7 @@ python:
   - "3.7"
 install: pip install pipenv
 script:
-  - ./test.sh
+  - PIPENV_IGNORE_VIRTUALENVS=1 pipenv run py.test tests
+  - PIPENV_IGNORE_VIRTUALENVS=1 pipenv run mypy --ignore-missing-imports --strict-optional --check-untyped-defs talepy/
+  - PIPENV_IGNORE_VIRTUALENVS=1 pipenv run flake8 talepy tests
+  - PIPENV_IGNORE_VIRTUALENVS=1 pipenv run isort --recursive --check-only talepy tests

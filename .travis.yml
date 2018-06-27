@@ -2,9 +2,13 @@ language: python
 python:
   - "3.6"
   - "3.7"
+env:
+  global:
+    - PIPENV_VENV_IN_PROJECT=1
+    - PIPENV_IGNORE_VIRTUALENVS=1
 install:
   - pip install pipenv
-  - pipenv install --system
+  - pipenv install --dev
 script:
   - py.test tests
   - mypy --ignore-missing-imports --strict-optional --check-untyped-defs talepy/

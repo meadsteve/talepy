@@ -1,0 +1,6 @@
+# Cache stuff
+.pytest_cache/
+.mypy_cache/
+
+# IDE junk
+.idea/

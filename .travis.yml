@@ -1,0 +1,8 @@
+language: python
+python:
+  - "3.6"
+  - "3.7"
+install: pipenv install
+script:
+  - py.test tests
+  - mypy --ignore-missing-imports --strict-optional --check-untyped-defs talepy/

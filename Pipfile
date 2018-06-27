@@ -9,7 +9,7 @@ name = "pypi"
 
 pytest = "*"
 mypy = "*"
-"flake8" = "*"
+flake8 = "*"
 isort = "*"
 
 [requires]

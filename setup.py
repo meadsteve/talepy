@@ -6,7 +6,11 @@ def read(fname):
 
 setup(
     name = "talepy",
-    packages = ["talepy"],
+    packages = [".", "talepy"],
+    package_data={
+        # root markdown files should be packaged
+        '.': ['*.md'],
+    },
     version = "0.2.0",
     description = "Distributed Transactions Helper",
     author = "Steve Brazier",

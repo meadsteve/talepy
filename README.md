@@ -31,11 +31,11 @@ class DebitCustomerBalance(Step):
     def __init__(self):
         self.payment_client= {}
 
-    def compensate(self, state):
+    def execute(self, state):
         state['payment_id'] = self.payment_client.bill(state.customer_id, state.payment_amount)
         return state
         
-    def execute(self, state):
+    def compensate(self, state):
         self.payment_client.refund(state['payment_id'])
        
 ```

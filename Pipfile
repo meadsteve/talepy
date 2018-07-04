@@ -9,8 +9,9 @@ name = "pypi"
 
 pytest = "*"
 mypy = "*"
-flake8 = "*"
+"flake8" = "*"
 isort = "*"
+twine = "*"
 
 [requires]
 python_version = "3.6"

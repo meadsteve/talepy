@@ -4,3 +4,7 @@
 
 # IDE junk
 .idea/
+
+# Package Deploy
+dist/
+MANIFEST

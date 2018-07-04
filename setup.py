@@ -7,7 +7,7 @@ def read(fname):
 setup(
     name = "talepy",
     packages = ["talepy"],
-    version = "0.1.1",
+    version = "0.2.0",
     description = "Distributed Transactions Helper",
     author = "Steve Brazier",
     author_email = "meadsteve@gmail.com",

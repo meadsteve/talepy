@@ -1,6 +1,7 @@
 # Cache stuff
 .pytest_cache/
 .mypy_cache/
+talepy.egg-info
 
 # IDE junk
 .idea/

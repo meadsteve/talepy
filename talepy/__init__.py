@@ -19,4 +19,4 @@ def run_transaction(steps: List[Step], starting_state=None):
 
     except Exception as error:
         _compensate_completed_steps(completed_steps)
-        return error
+        raise error

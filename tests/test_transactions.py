@@ -57,6 +57,18 @@ def test_a_transaction_runs_many_steps_it_wraps_and_passes_state():
     assert step_two.actions_taken == ["run execute: 1"]
 
 
+def test_final_state_is_returned():
+    step_one = MockCountingStep()
+    step_two = MockCountingStep()
+
+    result = run_transaction(
+        steps=[step_one, step_two],
+        starting_state=0
+    )
+
+    assert result == 2
+
+
 def test_if_a_transaction_fails_all_compensations_are_applied():
     step_one = MockCountingStep()
     step_two = MockCountingStep()
@@ -93,3 +105,27 @@ def test_exceptions_are_raised_eventually():
             steps=[MockCountingStep(), AlwaysFailsStep()],
             starting_state=0
         )
+
+
+def test_single_lambdas_are_turned_into_steps():
+    result = run_transaction(
+        steps=[
+            lambda x: x + 1,
+            lambda x: x + 2,
+        ],
+        starting_state=0
+    )
+
+    assert result == 3
+
+
+def test_pairs_of_lambdas_are_turned_into_a_step():
+    result = run_transaction(
+        steps=[
+            (lambda x: x + 1, lambda y: None),
+            (lambda x: x + 2, lambda y: None),
+        ],
+        starting_state=0
+    )
+
+    assert result == 3

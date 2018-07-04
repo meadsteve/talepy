@@ -1,6 +1,6 @@
-from typing import Tuple, Any, List
+from typing import Tuple, Any, List, Iterable
 
-from .steps import Step
+from .steps import Step, build_step_list, StepLike
 
 
 def _compensate_completed_steps(completed_steps: List[Tuple[Step, Any]]):
@@ -8,7 +8,8 @@ def _compensate_completed_steps(completed_steps: List[Tuple[Step, Any]]):
         step.compensate(state)
 
 
-def run_transaction(steps: List[Step], starting_state=None):
+def run_transaction(steps: Iterable[StepLike], starting_state=None):
+    steps = build_step_list(steps)
     completed_steps: List[Tuple[Step, Any]] = []
     state = starting_state
     try:

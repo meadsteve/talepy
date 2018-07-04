@@ -53,7 +53,7 @@ run_transaction(
         BookHotel(), 
         EmailCustomerDetailsOfBooking()
     ],
-    starting_state=0
+    starting_state={}
 )
 ```
 

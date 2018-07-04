@@ -4,6 +4,8 @@ set -ex
 
 version=`pipenv run python setup.py --version`
 
+git fetch --tags
+
 if git tag --list | grep "v$version";
 then
     echo "Version already released"

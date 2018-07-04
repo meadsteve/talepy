@@ -1,8 +1,7 @@
-import os
-from distutils.core import setup
+from setuptools import setup
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+with open('README.md') as f:
+    long_description = f.read()
 
 setup(
     name = "talepy",
@@ -11,7 +10,7 @@ setup(
         # root markdown files should be packaged
         '.': ['*.md'],
     },
-    version = "0.2.0",
+    version = "0.2.1",
     description = "Distributed Transactions Helper",
     author = "Steve Brazier",
     author_email = "meadsteve@gmail.com",
@@ -22,6 +21,6 @@ setup(
         "Programming Language :: Python :: 3",
         "Development Status :: 4 - Beta",
         ],
-    long_description = read("README.md"),
+    long_description = long_description,
     long_description_content_type='text/markdown'
 )

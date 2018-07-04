@@ -12,6 +12,7 @@ mypy = "*"
 "flake8" = "*"
 isort = "*"
 twine = "*"
+setuptools = "*"
 
 [requires]
 python_version = "3.6"

@@ -1,8 +1,13 @@
+import os
 from distutils.core import setup
+
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
 setup(
     name = "talepy",
     packages = ["talepy"],
-    version = "0.1.0",
+    version = "0.1.1",
     description = "Distributed Transactions Helper",
     author = "Steve Brazier",
     author_email = "meadsteve@gmail.com",
@@ -13,9 +18,6 @@ setup(
         "Programming Language :: Python :: 3",
         "Development Status :: 4 - Beta",
         ],
-    long_description = """\
-Tale Distributed Transactions
--------------------------------------
-
-"""
+    long_description = read("README.md"),
+    long_description_content_type='text/markdown'
 )

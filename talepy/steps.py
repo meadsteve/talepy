@@ -37,8 +37,7 @@ class LambdaStep(Step[Any, Y]):
 
 
 def _arity(func: Callable) -> int:
-    (args, _varargs, _varkw, _defaults) = inspect.getargspec(func)
-    return len(args)
+    return len(inspect.signature(func).parameters)
 
 
 FunctionPair = Tuple[Callable[[Any], Y], Callable[[Y], Any]]

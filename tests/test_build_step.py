@@ -1,6 +1,7 @@
 import pytest
 
-from talepy.steps import InputState, OutputState, Step, build_step
+from talepy.steps import (InputState, InvalidStepDefinition, OutputState, Step,
+                          build_step)
 
 
 class StubStep(Step):
@@ -34,5 +35,5 @@ non_step_like_objects = [
 
 @pytest.mark.parametrize('non_step_like_object', non_step_like_objects)
 def test_things_that_should_not_turn_into_steps(non_step_like_object):
-    with pytest.raises(Exception):
+    with pytest.raises(InvalidStepDefinition):
         build_step(non_step_like_object)

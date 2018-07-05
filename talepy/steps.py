@@ -40,6 +40,10 @@ def _arity(func: Callable) -> int:
     return len(inspect.signature(func).parameters)
 
 
+class InvalidStepDefinition(Exception):
+    pass
+
+
 FunctionPair = Tuple[Callable[[Any], Y], Callable[[Y], Any]]
 PlainFunction = Callable[[Any], Any]
 StepLike = Union[Step, FunctionPair, PlainFunction]
@@ -53,7 +57,7 @@ def build_step(step_definition: StepLike) -> Step:
     if callable(step_definition) and _arity(step_definition) == 1:
         return LambdaStep(step_definition)
 
-    raise Exception(f"Invalid step definition {step_definition}")
+    raise InvalidStepDefinition(f"Invalid step definition {step_definition}")
 
 
 def build_step_list(step_definitions: Iterable[StepLike]) -> Iterable[Step]:

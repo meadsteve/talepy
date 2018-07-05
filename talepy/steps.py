@@ -5,8 +5,6 @@ from typing import Any, Callable, Generic, Iterable, Tuple, TypeVar, Union
 InputState = TypeVar('InputState')
 OutputState = TypeVar('OutputState')
 
-Y = TypeVar('Y')
-
 
 class Step(ABC, Generic[InputState, OutputState]):
 
@@ -17,6 +15,9 @@ class Step(ABC, Generic[InputState, OutputState]):
     @abstractmethod
     def compensate(self, state: OutputState) -> None:
         pass
+
+
+Y = TypeVar('Y')
 
 
 class LambdaStep(Step[Any, Y]):
@@ -44,7 +45,8 @@ class InvalidStepDefinition(Exception):
     pass
 
 
-FunctionPair = Tuple[Callable[[Any], Y], Callable[[Y], Any]]
+X = TypeVar('X')
+FunctionPair = Tuple[Callable[[Any], X], Callable[[X], Any]]
 PlainFunction = Callable[[Any], Any]
 StepLike = Union[Step, FunctionPair, PlainFunction]
 

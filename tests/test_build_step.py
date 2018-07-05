@@ -13,10 +13,20 @@ class StubStep(Step):
         pass
 
 
+def arity_one_function(state):
+    pass
+
+
+def arity_two_function(state, what):
+    pass
+
+
 step_like_objects = [
     StubStep(),
     (lambda x: x + 1, lambda y: y - 1),
-    lambda x: x + 1
+    lambda x: x + 1,
+    (arity_one_function, arity_one_function),
+    arity_one_function
 ]
 
 
@@ -29,7 +39,9 @@ def test_things_that_should_turn_into_steps(step_like_object):
 non_step_like_objects = [
     {},
     "step",
-    lambda x, y: x + y  # arity 2 - should only take one state arg
+    lambda x, y: x + y,  # arity 2 - should only take one state arg,
+    arity_two_function,
+    (arity_one_function, arity_two_function)
 ]
 
 

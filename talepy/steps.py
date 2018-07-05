@@ -1,3 +1,4 @@
+import inspect
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Generic, Iterable, Tuple, TypeVar, Union
 
@@ -35,21 +36,25 @@ class LambdaStep(Step[Any, Y]):
         self.compensate_lambda(state)
 
 
+def _arity(func: Callable) -> int:
+    (args, _varargs, _varkw, _defaults) = inspect.getargspec(func)
+    return len(args)
+
 FunctionPair = Tuple[Callable[[Any], Y], Callable[[Y], Any]]
 PlainFunction = Callable[[Any], Any]
 StepLike = Union[Step, FunctionPair, PlainFunction]
 
 
-def _build_step(step_definition: StepLike) -> Step:
+def build_step(step_definition: StepLike) -> Step:
     if isinstance(step_definition, Step):
         return step_definition
     if isinstance(step_definition, tuple) and len(step_definition) == 2:
         return LambdaStep(step_definition[0], step_definition[1])
-    if callable(step_definition):
+    if callable(step_definition) and _arity(step_definition) == 1:
         return LambdaStep(step_definition)
 
     raise Exception(f"Invalid step definition {step_definition}")
 
 
 def build_step_list(step_definitions: Iterable[StepLike]) -> Iterable[Step]:
-    return map(_build_step, step_definitions)
+    return map(build_step, step_definitions)

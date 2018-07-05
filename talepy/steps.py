@@ -40,6 +40,7 @@ def _arity(func: Callable) -> int:
     (args, _varargs, _varkw, _defaults) = inspect.getargspec(func)
     return len(args)
 
+
 FunctionPair = Tuple[Callable[[Any], Y], Callable[[Y], Any]]
 PlainFunction = Callable[[Any], Any]
 StepLike = Union[Step, FunctionPair, PlainFunction]

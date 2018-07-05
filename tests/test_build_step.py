@@ -28,7 +28,7 @@ def test_things_that_should_turn_into_steps(step_like_object):
 non_step_like_objects = [
     {},
     "step",
-    lambda x,y: x + y # arity 2 - should only take one state arg
+    lambda x, y: x + y  # arity 2 - should only take one state arg
 ]
 
 

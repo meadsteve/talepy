@@ -4,7 +4,7 @@ from .steps import Step, build_step_list, StepLike
 
 
 def _compensate_completed_steps(completed_steps: List[Tuple[Step, Any]]):
-    for (step, state) in completed_steps:
+    for (step, state) in reversed(completed_steps):
         step.compensate(state)
 
 

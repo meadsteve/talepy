@@ -1,8 +1,9 @@
-import inspect
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Generic, Iterable, Tuple, TypeVar, Union
+from typing import Any, Callable, Generic, Iterable, TypeVar, Union
 
 from talepy.exceptions import InvalidStepDefinition
+from talepy.functional import (FunctionPair, PlainStateChangingFunction, arity,
+                               is_pair_of_funcs)
 
 InputState = TypeVar('InputState')
 OutputState = TypeVar('OutputState')
@@ -39,31 +40,18 @@ class LambdaStep(Step[Any, Y]):
         self.compensate_lambda(state)
 
 
-def _arity(func: Callable) -> int:
-    return len(inspect.signature(func).parameters)
+StepLike = Union[Step, FunctionPair, PlainStateChangingFunction]
 
 
-def _is_func_pair(step_definition: Any):
-    return len(step_definition) == 2 \
-       and callable(step_definition[0]) and _arity(step_definition[0]) == 1 \
-       and callable(step_definition[1]) and _arity(step_definition[1]) == 1
+def build_step(definition: StepLike) -> Step:
+    if isinstance(definition, Step):
+        return definition
+    if isinstance(definition, tuple) and is_pair_of_funcs(definition):
+        return LambdaStep(definition[0], definition[1])
+    if callable(definition) and arity(definition) == 1:
+        return LambdaStep(definition)
 
-
-X = TypeVar('X')
-FunctionPair = Tuple[Callable[[Any], X], Callable[[X], Any]]
-PlainFunction = Callable[[Any], Any]
-StepLike = Union[Step, FunctionPair, PlainFunction]
-
-
-def build_step(step_definition: StepLike) -> Step:
-    if isinstance(step_definition, Step):
-        return step_definition
-    if isinstance(step_definition, tuple) and _is_func_pair(step_definition):
-        return LambdaStep(step_definition[0], step_definition[1])
-    if callable(step_definition) and _arity(step_definition) == 1:
-        return LambdaStep(step_definition)
-
-    raise InvalidStepDefinition(step_definition)
+    raise InvalidStepDefinition(definition)
 
 
 def build_step_list(step_definitions: Iterable[StepLike]) -> Iterable[Step]:

@@ -2,6 +2,8 @@ import inspect
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Generic, Iterable, Tuple, TypeVar, Union
 
+from talepy.exceptions import InvalidStepDefinition
+
 InputState = TypeVar('InputState')
 OutputState = TypeVar('OutputState')
 
@@ -47,10 +49,6 @@ def _is_func_pair(step_definition: Any):
        and callable(step_definition[1]) and _arity(step_definition[1]) == 1
 
 
-class InvalidStepDefinition(Exception):
-    pass
-
-
 X = TypeVar('X')
 FunctionPair = Tuple[Callable[[Any], X], Callable[[X], Any]]
 PlainFunction = Callable[[Any], Any]
@@ -65,7 +63,7 @@ def build_step(step_definition: StepLike) -> Step:
     if callable(step_definition) and _arity(step_definition) == 1:
         return LambdaStep(step_definition)
 
-    raise InvalidStepDefinition(f"Invalid step definition {step_definition}")
+    raise InvalidStepDefinition(step_definition)
 
 
 def build_step_list(step_definitions: Iterable[StepLike]) -> Iterable[Step]:

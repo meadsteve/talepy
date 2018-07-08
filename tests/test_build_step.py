@@ -1,7 +1,7 @@
 import pytest
 
-from talepy.steps import (InputState, InvalidStepDefinition, OutputState, Step,
-                          build_step)
+from talepy.exceptions import InvalidStepDefinition
+from talepy.steps import InputState, OutputState, Step, build_step
 
 
 class StubStep(Step):

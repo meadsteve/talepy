@@ -3,6 +3,7 @@ import typing
 import pytest
 
 from talepy import run_transaction
+from talepy.exceptions import CompensationFailure
 from talepy.steps import Step
 
 
@@ -21,6 +22,10 @@ class MockCountingStep(Step[int, int]):
         return counter_state + 1
 
 
+class AlwaysFailException(Exception):
+    pass
+
+
 class AlwaysFailsStep(Step):
 
     actions_taken: typing.List[str]
@@ -32,7 +37,7 @@ class AlwaysFailsStep(Step):
         pass
 
     def execute(self, counter_state):
-        raise Exception("oh no - How shocking")
+        raise AlwaysFailException("oh no - How shocking")
 
 
 def test_a_transaction_runs_a_step_it_wraps():
@@ -74,7 +79,7 @@ def test_if_a_transaction_fails_all_compensations_are_applied():
     step_two = MockCountingStep()
     failing_step = AlwaysFailsStep()
 
-    with pytest.raises(Exception):
+    with pytest.raises(AlwaysFailException):
         run_transaction(
             steps=[step_one, step_two, failing_step],
             starting_state=0
@@ -90,7 +95,7 @@ def test_if_a_transaction_fails_later_steps_are_ignored():
     failing_step = AlwaysFailsStep()
     never_executed_step = MockCountingStep()
 
-    with pytest.raises(Exception):
+    with pytest.raises(AlwaysFailException):
         run_transaction(
             steps=[step_one, step_two, failing_step, never_executed_step],
             starting_state=0
@@ -100,7 +105,7 @@ def test_if_a_transaction_fails_later_steps_are_ignored():
 
 
 def test_exceptions_are_raised_eventually():
-    with pytest.raises(Exception, message="oh no - How shocking"):
+    with pytest.raises(AlwaysFailException, message="oh no - How shocking"):
         run_transaction(
             steps=[MockCountingStep(), AlwaysFailsStep()],
             starting_state=0
@@ -129,3 +134,24 @@ def test_pairs_of_lambdas_are_turned_into_a_step():
     )
 
     assert result == 3
+
+
+def test_failures_in_compensations_are_caught_and_bundled():
+    def create_failure(message):
+        def fail(s):
+            raise Exception(message)
+        return fail
+
+    with pytest.raises(CompensationFailure) as e_info:
+        run_transaction(
+            steps=[
+                (lambda x: x + 1, create_failure("reverting one")),
+                (lambda x: x + 2, create_failure("reverting two")),
+                (create_failure("STOP"), lambda x: x - 3),
+            ],
+            starting_state=0
+        )
+
+    assert str(e_info.value) == f"Failed to apply compensation of 2 steps"
+    error_messages = map(lambda e: str(e), e_info.value.inner_exceptions)
+    assert list(error_messages) == ['reverting two', 'reverting one']

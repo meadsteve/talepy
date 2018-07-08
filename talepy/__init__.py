@@ -1,11 +1,18 @@
 from typing import Tuple, Any, List, Iterable
 
+from talepy.exceptions import CompensationFailure
 from .steps import Step, build_step_list, StepLike
 
 
 def _compensate_completed_steps(completed_steps: List[Tuple[Step, Any]]):
+    failures = []
     for (step, state) in reversed(completed_steps):
-        step.compensate(state)
+        try:
+            step.compensate(state)
+        except Exception as failure:
+            failures.append(failure)
+    if failures != []:
+        raise CompensationFailure(failures)
 
 
 def run_transaction(steps: Iterable[StepLike], starting_state=None):

@@ -15,6 +15,4 @@ class CompensationFailure(TalepyException):
 
     def __init__(self, failures: List[Exception]) -> None:
         self.inner_exceptions = failures
-        super().__init__(
-            f"Failed to apply compensation of {len(failures)} steps"
-        )
+        super().__init__(f"Failed to apply compensation of {len(failures)} steps")

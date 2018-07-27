@@ -10,6 +10,7 @@ def test_compensate_calls_the_second_lambda_with_the_supplied_state():
     class Reverter:
         def lambda_func(self, state_given):
             self.reverted = state_given
+
     reverter = Reverter()
     step = LambdaStep(lambda x: f"hello {x}", reverter.lambda_func)
 

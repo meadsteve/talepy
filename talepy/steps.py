@@ -2,15 +2,18 @@ from abc import ABC, abstractmethod
 from typing import Any, Callable, Generic, Iterable, TypeVar, Union
 
 from talepy.exceptions import InvalidStepDefinition
-from talepy.functional import (FunctionPair, PlainStateChangingFunction, arity,
-                               is_pair_of_funcs)
+from talepy.functional import (
+    FunctionPair,
+    PlainStateChangingFunction,
+    arity,
+    is_pair_of_funcs,
+)
 
-InputState = TypeVar('InputState')
-OutputState = TypeVar('OutputState')
+InputState = TypeVar("InputState")
+OutputState = TypeVar("OutputState")
 
 
 class Step(ABC, Generic[InputState, OutputState]):
-
     @abstractmethod
     def execute(self, state: InputState) -> OutputState:
         pass
@@ -20,15 +23,14 @@ class Step(ABC, Generic[InputState, OutputState]):
         pass
 
 
-Y = TypeVar('Y')
+Y = TypeVar("Y")
 
 
 class LambdaStep(Step[Any, Y]):
-
     def __init__(
         self,
         execute_lambda: Callable[[Any], Y],
-        compensate_lambda: Callable[[Y], Any] = None
+        compensate_lambda: Callable[[Y], Any] = None,
     ) -> None:
         self.execute_lambda = execute_lambda
         self.compensate_lambda = compensate_lambda or (lambda _x: None)

@@ -9,10 +9,10 @@ name = "pypi"
 
 pytest = "*"
 mypy = "*"
-"flake8" = "*"
 isort = "*"
 twine = "*"
 setuptools = "*"
+black = "*"
 
 [requires]
 python_version = "3.6"

@@ -9,7 +9,6 @@ name = "pypi"
 
 pytest = "*"
 mypy = "*"
-isort = "*"
 twine = "*"
 setuptools = "*"
 black = "*"

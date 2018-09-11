@@ -59,5 +59,48 @@ run_transaction(
 If any step along the way fails then the compensate method on each step
 is called in reverse order until everything is undone.
 
+### Steps as Lambas
+
+For some cases you may not want to create a class for the step. Lambdas can be used directly 
+instead. Extending the previous example:
+
+```python
+from talepy import run_transaction
+
+run_transaction(
+    steps=[
+        DebitCustomerBalance(), 
+        BookFlight(),
+        lambda _: print("LOG -- The flight has been booked"),
+        BookHotel(), 
+        EmailCustomerDetailsOfBooking()
+    ],
+    starting_state={}
+)
+```
+
+This new print statement will now execute following a success in `BookFlight`. 
+
+It's also possible to implement compensations by adding another lambda as a tuple pair:
+
+```python
+from talepy import run_transaction
+
+run_transaction(
+    steps=[
+        DebitCustomerBalance(), 
+        BookFlight(),
+        (
+            lambda _: print("LOG -- The flight has been booked"), 
+            lambda _: print("LOG -- ┌[ ಠ ▃ ಠ ]┐ something went wrong")
+        ),
+        BookHotel(), 
+        EmailCustomerDetailsOfBooking()
+    ],
+    starting_state={}
+)
+```
+
+
 ## Testing / Development
 TODO

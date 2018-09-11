@@ -1,6 +1,7 @@
 from typing import Tuple, Any, List, Iterable
 
 from talepy.exceptions import CompensationFailure
+from talepy.retries import StepWithRetries, execute_step_retry
 from .steps import Step, build_step_list, StepLike
 
 
@@ -15,13 +16,22 @@ def _compensate_completed_steps(completed_steps: List[Tuple[Step, Any]]):
         raise CompensationFailure(failures)
 
 
+def _execute_step(state, step: Step):
+    try:
+        return step.execute(state)
+    except Exception as e:
+        if isinstance(step, StepWithRetries):
+            return execute_step_retry(state, step, [e])
+        raise e
+
+
 def run_transaction(steps: Iterable[StepLike], starting_state=None):
     steps = build_step_list(steps)
     completed_steps: List[Tuple[Step, Any]] = []
     state = starting_state
     try:
         for step in steps:
-            state = step.execute(state)
+            state = _execute_step(state, step)
             completed_steps.append((step, state))
         return state
 

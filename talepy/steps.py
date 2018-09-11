@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Generic, Iterable, TypeVar, Union
 
-from talepy.exceptions import InvalidStepDefinition
-from talepy.functional import (
+from .exceptions import InvalidStepDefinition
+from .functional import (
     FunctionPair,
     PlainStateChangingFunction,
     arity,

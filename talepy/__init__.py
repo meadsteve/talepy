@@ -1,7 +1,7 @@
 from typing import Tuple, Any, List, Iterable
 
-from talepy.exceptions import CompensationFailure
-from talepy.retries import StepWithRetries, execute_step_retry
+from .exceptions import CompensationFailure
+from .retries import StepWithRetries, execute_step_retry
 from .steps import Step, build_step_list, StepLike
 
 

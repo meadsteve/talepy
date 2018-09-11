@@ -3,9 +3,9 @@ from typing import List
 
 import pytest
 
-from talepy import run_transaction
+from talepy import run_transaction, Step
 from talepy.exceptions import AbortRetries, FailuresAfterRetrying
-from talepy.retries import StepWithRetries
+from talepy.retries import StepWithRetries, attempt_retries
 
 
 class MockRetryStep(StepWithRetries):
@@ -70,6 +70,20 @@ class MockRetryStepThatRetriesTwiceThenGivesUp(StepWithRetries):
         raise AbortRetries("This isn't going to work")
 
 
+class RegularMockStep(Step):
+    actions_taken: typing.List[str]
+
+    def __init__(self):
+        self.actions_taken = []
+
+    def compensate(self, counter_state):
+        self.actions_taken.append(f"run compensate: {counter_state}")
+
+    def execute(self, counter_state):
+        self.actions_taken.append("trying")
+        raise FirstFail("this step will never succeed")
+
+
 class FirstFail(Exception):
     pass
 
@@ -107,3 +121,14 @@ def test_retries_can_be_stopped_by_raising_abort_retries():
     ]
 
     assert str(e_info.value) == "Failed to apply step after 2 attempts"
+
+
+def test_helper_method_runs_the_step_the_expected_number_of_times():
+    mock_step = RegularMockStep()
+
+    with pytest.raises(FailuresAfterRetrying) as e_info:
+        run_transaction(steps=[attempt_retries(mock_step, times=2)], starting_state=0)
+
+    assert mock_step.actions_taken == ["trying", "trying", "trying"]
+
+    assert str(e_info.value) == "Failed to apply step after 3 attempts"

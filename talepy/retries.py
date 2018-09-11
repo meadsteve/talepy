@@ -15,6 +15,28 @@ class StepWithRetries(Step[InputState, OutputState], ABC):
         pass
 
 
+def attempt_retries(step: Step, times: int) -> StepWithRetries:
+    class AutoRetryStep(StepWithRetries):
+        def __init__(self, wrapped_step: Step, max_tries: int) -> None:
+            self.wrapped_step = wrapped_step
+            self.attempts_made = 0
+            self.max_tries = max_tries
+
+        def compensate(self, state) -> None:
+            self.wrapped_step.compensate(state)
+
+        def execute(self, state):
+            self.attempts_made += 1
+            return self.wrapped_step.execute(state)
+
+        def retry(self, state, _failures):
+            if self.attempts_made > self.max_tries:
+                raise AbortRetries("Maximum number of retries hit")
+            return self.execute(state)
+
+    return AutoRetryStep(step, times)
+
+
 def execute_step_retry(state, step: StepWithRetries, previous_errors: List[Exception]):
     try:
         return step.retry(state, previous_errors)

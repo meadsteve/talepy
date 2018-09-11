@@ -59,7 +59,7 @@ run_transaction(
 If any step along the way fails then the compensate method on each step
 is called in reverse order until everything is undone.
 
-### Steps as Lambas
+### Steps as Lambdas
 
 For some cases you may not want to create a class for the step. Lambdas can be used directly 
 instead. Extending the previous example:

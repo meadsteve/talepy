@@ -101,6 +101,29 @@ run_transaction(
 )
 ```
 
+### Automatic retries
+
+You may also want to try a step a few times before giving up. A continence
+function is provided to help out with this. Starting with the initial example.
+If the hotel booking step is a bit unreliable and we want to try it 3 times:
+
+```python
+from talepy import run_transaction
+from talepy.retries import attempt_retries
+
+run_transaction(
+    steps=[
+        DebitCustomerBalance(), 
+        BookFlight(),
+        attempt_retries(BookHotel(), times=2), 
+        EmailCustomerDetailsOfBooking()
+    ],
+    starting_state={}
+)
+```
+
+The book hotel step will now be executed 3 times before the transaction is aborted. Once
+all these attempts fail the normal compensation logic will be applied.
 
 ## Testing / Development
 TODO

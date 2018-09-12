@@ -16,3 +16,15 @@ class CompensationFailure(TalepyException):
     def __init__(self, failures: List[Exception]) -> None:
         self.inner_exceptions = failures
         super().__init__(f"Failed to apply compensation of {len(failures)} steps")
+
+
+class AbortRetries(TalepyException):
+    pass
+
+
+class FailuresAfterRetrying(TalepyException):
+    inner_exceptions: List[Exception]
+
+    def __init__(self, failures: List[Exception]) -> None:
+        self.inner_exceptions = failures
+        super().__init__(f"Failed to apply step after {len(failures)} attempts")

@@ -12,7 +12,7 @@ def arity(func: Callable) -> int:
 
 def is_arity_one_pair(thing: Any) -> bool:
     return (
-        hasattr(thing, '__len__')
+        hasattr(thing, "__len__")
         and len(thing) == 2
         and callable(thing[0])
         and arity(thing[0]) == 1

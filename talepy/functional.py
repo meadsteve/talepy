@@ -10,9 +10,10 @@ def arity(func: Callable) -> int:
     return len(inspect.signature(func).parameters)
 
 
-def is_pair_of_funcs(thing: Any) -> bool:
+def is_arity_one_pair(thing: Any) -> bool:
     return (
-        len(thing) == 2
+        hasattr(thing, '__len__')
+        and len(thing) == 2
         and callable(thing[0])
         and arity(thing[0]) == 1
         and callable(thing[1])

@@ -6,7 +6,7 @@ from .functional import (
     FunctionPair,
     PlainStateChangingFunction,
     arity,
-    is_pair_of_funcs,
+    is_arity_one_pair,
 )
 
 InputState = TypeVar("InputState")
@@ -48,7 +48,7 @@ StepLike = Union[Step, FunctionPair, PlainStateChangingFunction]
 def build_step(definition: StepLike) -> Step:
     if isinstance(definition, Step):
         return definition
-    if isinstance(definition, tuple) and is_pair_of_funcs(definition):
+    if isinstance(definition, tuple) and is_arity_one_pair(definition):
         return LambdaStep(definition[0], definition[1])
     if callable(definition) and arity(definition) == 1:
         return LambdaStep(definition)

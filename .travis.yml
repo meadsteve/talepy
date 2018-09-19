@@ -4,6 +4,9 @@ python:
   - "3.6"
   - "3.7"
 
+# added the following to enable 3.7 support a little early
+dist: xenial
+
 env:
   global:
     - PIPENV_VENV_IN_PROJECT=1

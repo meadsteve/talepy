@@ -18,6 +18,9 @@ def test_we_can_get_arity_from_functions(test_func, expected_arity: int):
     ("steve", False),
     ((lambda x, z: x + z, lambda y: y), False),
     ((lambda x: x, lambda y, z: y + z), False),
+    ((lambda: 0, lambda y: y), False),
+    ((lambda x: x, lambda: 0), False),
+    ((lambda x: x, lambda y: y, lambda z: z), False),
 ])
 def test_we_can_tell_if_something_is_a_pair_of_functions(thing, expected_result):
     assert is_arity_one_pair(thing) == expected_result

@@ -9,3 +9,6 @@ talepy.egg-info
 # Package Deploy
 dist/
 MANIFEST
+
+# Mutation testing output
+mutation_session.json

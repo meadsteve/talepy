@@ -6,12 +6,12 @@ name = "pypi"
 [packages]
 
 [dev-packages]
-
 pytest = "*"
 mypy = "*"
 twine = "*"
 setuptools = "*"
-black = "*"
+black = "==18.6b4"
+cosmic-ray = "*"
 
 [requires]
 python_version = "3.6"

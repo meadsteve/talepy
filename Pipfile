@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+cosmic-ray = "*"
 
 [dev-packages]
 pytest = "*"
@@ -12,6 +13,7 @@ twine = "*"
 setuptools = "*"
 black = "==18.6b4"
 cosmic-ray = "*"
+cosmic-ray-pytest = "*"
 
 [requires]
 python_version = "3.6"

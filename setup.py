@@ -10,7 +10,7 @@ setup(
         # root markdown files should be packaged
         '.': ['*.md'],
     },
-    version = "0.6.0",
+    version = "0.6.1",
     description = "Distributed Transactions Helper",
     author = "Steve Brazier",
     author_email = "meadsteve@gmail.com",

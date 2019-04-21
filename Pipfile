@@ -9,8 +9,6 @@ mypy = "*"
 twine = "*"
 setuptools = "*"
 black = "==19.3b0"
-cosmic-ray = "*"
-cosmic-ray-pytest = "*"
 
 [requires]
 python_version = "3.6"

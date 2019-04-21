@@ -8,7 +8,7 @@ pytest = "*"
 mypy = "*"
 twine = "*"
 setuptools = "*"
-black = "==18.6b4"
+black = "==19.3b0"
 cosmic-ray = "*"
 cosmic-ray-pytest = "*"
 

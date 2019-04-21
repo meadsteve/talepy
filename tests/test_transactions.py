@@ -93,7 +93,7 @@ def test_if_a_transaction_fails_later_steps_are_ignored():
 
 
 def test_exceptions_are_raised_eventually():
-    with pytest.raises(AlwaysFailException, message="oh no - How shocking"):
+    with pytest.raises(AlwaysFailException, match="oh no - How shocking"):
         run_transaction(steps=[MockCountingStep(), AlwaysFailsStep()], starting_state=0)
 
 

@@ -9,8 +9,10 @@ setup(
     package_data={
         # root markdown files should be packaged
         '.': ['*.md'],
+        # We have type information
+        'talepy': ['py.typed']
     },
-    version = "0.6.1",
+    version = "0.6.2",
     description = "Distributed Transactions Helper",
     author = "Steve Brazier",
     author_email = "meadsteve@gmail.com",

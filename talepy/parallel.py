@@ -17,7 +17,7 @@ async def run_async_transaction(steps: Iterable[StepLike], starting_state=None):
     results = await asyncio.gather(*async_steps, return_exceptions=True)
     executed_steps = zip(build_step_list(steps), results)
     successful_steps = [(step, result) for (step, result) in executed_steps if not isinstance(result, Exception)]
-    if (len(successful_steps) != len(async_steps)):
+    if len(successful_steps) != len(async_steps):
         for (step, result) in successful_steps:
             step.compensate(result)
         raise AsyncStepFailures

@@ -2,6 +2,7 @@ import typing
 
 import pytest
 
+from talepy.exceptions import AsyncStepFailures
 from talepy.parallel import run_async_transaction
 from talepy.steps import Step
 
@@ -65,7 +66,7 @@ async def test_if_any_step_fails_they_all_get_rolled_back():
 
     try:
         await run_async_transaction(steps=[step_1, step_2, step_3], starting_state=0)
-    except Exception as _e:
+    except AsyncStepFailures as _e:
         pass
 
     # Steps 2 and 3 have been run and then compensated

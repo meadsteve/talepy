@@ -28,3 +28,7 @@ class FailuresAfterRetrying(TalepyException):
     def __init__(self, failures: List[Exception]) -> None:
         self.inner_exceptions = failures
         super().__init__(f"Failed to apply step after {len(failures)} attempts")
+
+
+class AsyncStepFailures(TalepyException):
+    pass

@@ -1,6 +1,7 @@
 import asyncio
 from typing import Iterable
 
+from talepy.exceptions import AsyncStepFailures
 from . import Step, StepLike, build_step_list
 
 
@@ -19,5 +20,5 @@ async def run_async_transaction(steps: Iterable[StepLike], starting_state=None):
     if (len(successful_steps) != len(async_steps)):
         for (step, result) in successful_steps:
             step.compensate(result)
-        raise Exception
+        raise AsyncStepFailures
     return results

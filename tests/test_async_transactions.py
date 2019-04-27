@@ -56,3 +56,18 @@ async def test_a_transaction_runs_many_steps_it_wraps():
     assert step_1.actions_taken == ["run execute: 0"]
     assert step_2.actions_taken == ["run execute: 0"]
     assert step_3.actions_taken == ["run execute: 0"]
+
+@pytest.mark.asyncio
+async def test_if_any_step_fails_they_all_get_rolled_back():
+    step_1 = AlwaysFailsStep()
+    step_2 = MockCountingStep()
+    step_3 = MockCountingStep()
+
+    try:
+        await run_async_transaction(steps=[step_1, step_2, step_3], starting_state=0)
+    except Exception as _e:
+        pass
+
+    # Steps 2 and 3 have been run and then compensated
+    assert step_2.actions_taken == ["run execute: 0", "run compensate: 1"]
+    assert step_3.actions_taken == ["run execute: 0", "run compensate: 1"]

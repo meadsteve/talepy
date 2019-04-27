@@ -9,6 +9,7 @@ mypy = "*"
 twine = "*"
 setuptools = "*"
 black = "==19.3b0"
+pytest-asyncio = "*"
 
 [requires]
 python_version = "3.6"

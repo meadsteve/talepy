@@ -12,7 +12,15 @@ def _build_step_coroutine(state, step: Step):
             return await step.execute(state)
         else:
             return step.execute(state)
+    return _runner()
 
+
+def _build_compensation_coroutine(state, step: Step):
+    async def _runner():
+        if inspect.iscoroutinefunction(step.execute):
+            return await step.compensate(state)
+        else:
+            return step.compensate(state)
     return _runner()
 
 
@@ -29,7 +37,9 @@ async def run_async_transaction(steps: Iterable[StepLike], starting_state=None):
         if not isinstance(result, Exception)
     ]
     if len(successful_steps) != len(async_steps):
-        for (step, result) in successful_steps:
-            step.compensate(result)
+        async_compensations = [
+            _build_compensation_coroutine(state, step) for (step, state) in successful_steps
+        ]
+        _compensations = await asyncio.gather(*async_compensations, return_exceptions=True)
         raise AsyncStepFailures
     return results

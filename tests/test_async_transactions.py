@@ -37,6 +37,21 @@ class MockAsyncExecuteStep(Step[int, int]):
         return counter_state + 1
 
 
+class MockAsyncExecuteAndCompensateStep(Step[int, int]):
+
+    actions_taken: typing.List[str]
+
+    def __init__(self):
+        self.actions_taken = []
+
+    async def compensate(self, counter_state):
+        self.actions_taken.append(f"run compensate: {counter_state}")
+
+    async def execute(self, counter_state):
+        self.actions_taken.append(f"run execute: {counter_state}")
+        return counter_state + 1
+
+
 class AlwaysFailException(Exception):
     pass
 
@@ -99,3 +114,19 @@ async def test_steps_may_be_async():
 
     assert step_1.actions_taken == ["run execute: 0"]
     assert step_2.actions_taken == ["run execute: 0"]
+
+
+@pytest.mark.asyncio
+async def test_compensate_funcs_can_be_async():
+    step_1 = AlwaysFailsStep()
+    step_2 = MockAsyncExecuteAndCompensateStep()
+    step_3 = MockCountingStep()
+
+    try:
+        await run_async_transaction(steps=[step_1, step_2, step_3], starting_state=0)
+    except AsyncStepFailures as _e:
+        pass
+
+    # Steps 2 and 3 have been run and then compensated
+    assert step_2.actions_taken == ["run execute: 0", "run compensate: 1"]
+    assert step_3.actions_taken == ["run execute: 0", "run compensate: 1"]

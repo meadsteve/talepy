@@ -162,7 +162,7 @@ async def test_regular_transactions_can_be_async():
 
 
 @pytest.mark.asyncio
-async def test_regular_transactions_can_be_async():
+async def test_currently_retries_cant_be_used_async():
     # TODO: Implement this functionality
     step_1 = MockCountingStep()
 

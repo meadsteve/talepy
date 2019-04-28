@@ -27,8 +27,8 @@ T = TypeVar("T")
 def partition(
     seq: Iterable[T], condition: Callable[[T], bool]
 ) -> Tuple[List[T], List[T]]:
-    truthy = []
-    falsy = []
+    truthy: List[T] = []
+    falsy: List[T] = []
 
     for item in seq:
         (truthy if condition(item) else falsy).append(item)

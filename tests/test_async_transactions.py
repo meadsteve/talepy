@@ -129,7 +129,7 @@ async def test_if_any_step_fails_they_all_get_rolled_back():
 
 
 @pytest.mark.asyncio
-async def test_if_any_step_fails_they_all_get_rolled_back():
+async def test_all_exceptions_are_returned_to_the_user():
     step_1 = AlwaysFailsStep()
     step_2 = AlwaysFailsStep()
 

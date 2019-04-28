@@ -125,5 +125,36 @@ run_transaction(
 The book hotel step will now be executed 3 times before the transaction is aborted. Once
 all these attempts fail the normal compensation logic will be applied.
 
+### Async
+
+If you want to make use of `async` in your steps you can use `run_async_transaction`
+instead. This behaves slightly differently to `run_transaction` as the ordering
+of the steps isn't guaranteed. This means all steps receive the same starting state.
+
+```python
+from talepy.parallel import run_async_transaction
+from talepy.steps import Step
+
+class AsyncBookFlight(Step):
+
+    async def execute(self, state):
+        # do something
+        return state
+        
+    async def compensate(self, state):
+        # revert something
+        pass
+       
+
+await run_async_transaction(
+    steps=[
+        DebitCustomerBalance(), 
+        AsyncBookFlight(),
+        EmailCustomerDetailsOfBooking()
+    ],
+    starting_state={}
+)
+```
+
 ## Testing / Development
 TODO

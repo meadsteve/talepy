@@ -2,11 +2,15 @@ import asyncio
 import inspect
 from typing import Iterable, Any, Tuple
 
-from talepy.exceptions import AsyncStepFailures
-from talepy.steps import Step, StepLike, build_step_list
+from .exceptions import AsyncStepFailures, RetriesCannotBeUsedInAsync
+from .steps import Step, StepLike, build_step_list
+from .retries import StepWithRetries
 
 
 def _build_step_coroutine(state, step: Step):
+    if isinstance(step, StepWithRetries):
+        raise RetriesCannotBeUsedInAsync
+
     async def _runner():
         if has_async_execute(step):
             return await step.execute(state)

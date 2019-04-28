@@ -5,12 +5,12 @@ class TalepyException(Exception):
     pass
 
 
-class InvalidStepDefinition(TalepyException):
+class InvalidStepDefinition(ValueError, TalepyException):
     def __init__(self, invalid_definition: Any) -> None:
         super().__init__(f"Invalid step definition: `{invalid_definition}`")
 
 
-class CompensationFailure(TalepyException):
+class CompensationFailure(RuntimeError, TalepyException):
     inner_exceptions: List[Exception]
 
     def __init__(self, failures: List[Exception]) -> None:
@@ -18,11 +18,11 @@ class CompensationFailure(TalepyException):
         super().__init__(f"Failed to apply compensation of {len(failures)} steps")
 
 
-class AbortRetries(TalepyException):
+class AbortRetries(RuntimeError, TalepyException):
     pass
 
 
-class FailuresAfterRetrying(TalepyException):
+class FailuresAfterRetrying(RuntimeError, TalepyException):
     inner_exceptions: List[Exception]
 
     def __init__(self, failures: List[Exception]) -> None:
@@ -30,12 +30,19 @@ class FailuresAfterRetrying(TalepyException):
         super().__init__(f"Failed to apply step after {len(failures)} attempts")
 
 
-class AsyncStepFailures(TalepyException):
+class AsyncStepFailures(RuntimeError, TalepyException):
     pass
 
 
-class AsyncStepUsedInSyncTransaction(TalepyException):
+class AsyncStepUsedInSyncTransaction(ValueError, TalepyException):
     def __init__(self) -> None:
         super().__init__(
             f"Async can only be used in steps when calling `run_async_transaction`"
+        )
+
+
+class RetriesCannotBeUsedInAsync(ValueError, TalepyException):
+    def __init__(self) -> None:
+        super().__init__(
+            f"Retries cannot currently be used in `run_async_transaction`"
         )

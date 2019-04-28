@@ -3,8 +3,9 @@ import typing
 import pytest
 
 from talepy import run_transaction
-from talepy.exceptions import AsyncStepFailures, AsyncStepUsedInSyncTransaction
+from talepy.exceptions import AsyncStepFailures, AsyncStepUsedInSyncTransaction, RetriesCannotBeUsedInAsync
 from talepy.parallel import run_async_transaction
+from talepy.retries import attempt_retries
 from talepy.steps import Step
 
 
@@ -154,3 +155,15 @@ async def test_regular_transactions_can_be_async():
 
     with pytest.raises(AsyncStepUsedInSyncTransaction):
         run_transaction(steps=[step_1], starting_state=0)
+
+
+@pytest.mark.asyncio
+async def test_regular_transactions_can_be_async():
+    # TODO: Implement this functionality
+    step_1 = MockCountingStep()
+
+    with pytest.raises(RetriesCannotBeUsedInAsync):
+        await run_async_transaction(
+            steps=[attempt_retries(step_1, times=2)],
+            starting_state=0
+        )

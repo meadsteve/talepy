@@ -53,6 +53,21 @@ class MockAsyncExecuteAndCompensateStep(Step[int, int]):
         return counter_state + 1
 
 
+class MockAsyncCompensateStep(Step[int, int]):
+
+    actions_taken: typing.List[str]
+
+    def __init__(self):
+        self.actions_taken = []
+
+    async def compensate(self, counter_state):
+        self.actions_taken.append(f"run compensate: {counter_state}")
+
+    def execute(self, counter_state):
+        self.actions_taken.append(f"run execute: {counter_state}")
+        return counter_state + 1
+
+
 class AlwaysFailException(Exception):
     pass
 
@@ -121,7 +136,7 @@ async def test_steps_may_be_async():
 async def test_compensate_funcs_can_be_async():
     step_1 = AlwaysFailsStep()
     step_2 = MockAsyncExecuteAndCompensateStep()
-    step_3 = MockCountingStep()
+    step_3 = MockAsyncCompensateStep()
 
     try:
         await run_async_transaction(steps=[step_1, step_2, step_3], starting_state=0)

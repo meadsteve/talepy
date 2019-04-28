@@ -18,7 +18,7 @@ def _build_step_coroutine(state, step: Step):
 
 def _build_compensation_coroutine(state, step: Step):
     async def _runner():
-        if inspect.iscoroutinefunction(step.execute):
+        if has_async_compensate(step):
             return await step.compensate(state)  # type: ignore
         else:
             return step.compensate(state)
@@ -46,6 +46,10 @@ async def _raise_on_any_failures(steps: Iterable[StepLike], results: Tuple[Any, 
 
 def has_async_execute(step: Step) -> bool:
     return inspect.iscoroutinefunction(step.execute)
+
+
+def has_async_compensate(step: Step) -> bool:
+    return inspect.iscoroutinefunction(step.compensate)
 
 
 async def run_async_transaction(

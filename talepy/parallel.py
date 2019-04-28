@@ -3,12 +3,12 @@ import inspect
 from typing import Iterable, Any, Tuple
 
 from talepy.exceptions import AsyncStepFailures
-from . import Step, StepLike, build_step_list
+from talepy.steps import Step, StepLike, build_step_list
 
 
 def _build_step_coroutine(state, step: Step):
     async def _runner():
-        if inspect.iscoroutinefunction(step.execute):
+        if has_async_execute(step):
             return await step.execute(state)
         else:
             return step.execute(state)
@@ -42,6 +42,10 @@ async def _raise_on_any_failures(steps: Iterable[StepLike], results: Tuple[Any, 
             *async_compensations, return_exceptions=True
         )
         raise AsyncStepFailures
+
+
+def has_async_execute(step: Step) -> bool:
+    return inspect.iscoroutinefunction(step.execute)
 
 
 async def run_async_transaction(

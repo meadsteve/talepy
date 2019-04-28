@@ -2,7 +2,8 @@ import typing
 
 import pytest
 
-from talepy.exceptions import AsyncStepFailures
+from talepy import run_transaction
+from talepy.exceptions import AsyncStepFailures, AsyncStepUsedInSyncTransaction
 from talepy.parallel import run_async_transaction
 from talepy.steps import Step
 
@@ -130,3 +131,11 @@ async def test_compensate_funcs_can_be_async():
     # Steps 2 and 3 have been run and then compensated
     assert step_2.actions_taken == ["run execute: 0", "run compensate: 1"]
     assert step_3.actions_taken == ["run execute: 0", "run compensate: 1"]
+
+
+@pytest.mark.asyncio
+async def test_regular_transactions_can_be_async():
+    step_1 = MockAsyncExecuteAndCompensateStep()
+
+    with pytest.raises(AsyncStepUsedInSyncTransaction):
+        run_transaction(steps=[step_1], starting_state=0)

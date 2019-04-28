@@ -32,3 +32,10 @@ class FailuresAfterRetrying(TalepyException):
 
 class AsyncStepFailures(TalepyException):
     pass
+
+
+class AsyncStepUsedInSyncTransaction(TalepyException):
+    def __init__(self) -> None:
+        super().__init__(
+            f"Async can only be used in steps when calling `run_async_transaction`"
+        )

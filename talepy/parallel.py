@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 from typing import Iterable
 
 from talepy.exceptions import AsyncStepFailures
@@ -7,7 +8,10 @@ from . import Step, StepLike, build_step_list
 
 def _build_step_coroutine(state, step: Step):
     async def _runner():
-        return step.execute(state)
+        if inspect.iscoroutinefunction(step.execute):
+            return await step.execute(state)
+        else:
+            return step.execute(state)
     return _runner()
 
 

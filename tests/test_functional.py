@@ -1,4 +1,4 @@
-from talepy.functional import arity, is_arity_one_pair
+from talepy.functional import arity, is_arity_one_pair, partition
 import pytest
 
 
@@ -27,3 +27,9 @@ def test_we_can_get_arity_from_functions(test_func, expected_arity: int):
 )
 def test_we_can_tell_if_something_is_a_pair_of_functions(thing, expected_result):
     assert is_arity_one_pair(thing) == expected_result
+
+
+def test_partition_splits_a_list():
+    odd, even = partition([1, 2, 3, 4], lambda x: x % 2)
+    assert odd == [1, 3]
+    assert even == [2, 4]

@@ -31,7 +31,10 @@ class FailuresAfterRetrying(RuntimeError, TalepyException):
 
 
 class AsyncStepFailures(RuntimeError, TalepyException):
-    pass
+    inner_exceptions: List[Exception]
+
+    def __init__(self, exceptions: List[Exception]) -> None:
+        self.inner_exceptions = exceptions
 
 
 class AsyncStepUsedInSyncTransaction(ValueError, TalepyException):

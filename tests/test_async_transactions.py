@@ -6,8 +6,7 @@ from talepy import run_transaction
 from talepy.exceptions import (
     AsyncStepFailures,
     AsyncStepUsedInSyncTransaction,
-    RetriesCannotBeUsedInAsync,
-)
+    RetriesCannotBeUsedInAsync)
 from talepy.parallel import run_async_transaction
 from talepy.retries import attempt_retries
 from talepy.steps import Step
@@ -83,12 +82,13 @@ class AlwaysFailsStep(Step):
 
     def __init__(self):
         self.actions_taken = []
+        self.exception = AlwaysFailException("oh no - How shocking")
 
     def compensate(self, counter_state):
         pass
 
     def execute(self, counter_state):
-        raise AlwaysFailException("oh no - How shocking")
+        raise self.exception
 
 
 @pytest.mark.asyncio
@@ -125,6 +125,20 @@ async def test_if_any_step_fails_they_all_get_rolled_back():
     # Steps 2 and 3 have been run and then compensated
     assert step_2.actions_taken == ["run execute: 0", "run compensate: 1"]
     assert step_3.actions_taken == ["run execute: 0", "run compensate: 1"]
+
+
+@pytest.mark.asyncio
+async def test_if_any_step_fails_they_all_get_rolled_back():
+    step_1 = AlwaysFailsStep()
+    step_2 = AlwaysFailsStep()
+
+    with pytest.raises(AsyncStepFailures) as caught_error:
+        await run_async_transaction(steps=[step_1, step_2], starting_state=0)
+
+    assert caught_error.value.inner_exceptions == [
+        step_1.exception,
+        step_2.exception
+    ]
 
 
 @pytest.mark.asyncio

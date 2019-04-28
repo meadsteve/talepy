@@ -1,5 +1,5 @@
 import inspect
-from typing import Any, Callable, Tuple, TypeVar
+from typing import Any, Callable, Tuple, TypeVar, Iterable, List
 
 X = TypeVar("X")
 FunctionPair = Tuple[Callable[[Any], X], Callable[[X], Any]]
@@ -19,3 +19,16 @@ def is_arity_one_pair(thing: Any) -> bool:
         and callable(thing[1])
         and arity(thing[1]) == 1
     )
+
+
+T = TypeVar("T")
+
+
+def partition(seq: Iterable[T], condition: Callable[[T], bool]) -> Tuple[List[T], List[T]]:
+    truthy = []
+    falsy = []
+
+    for item in seq:
+        (truthy if condition(item) else falsy).append(item)
+
+    return truthy, falsy

@@ -2,9 +2,10 @@ import asyncio
 import inspect
 from typing import Iterable, Any, Tuple
 
-from .exceptions import AsyncStepFailures, RetriesCannotBeUsedInAsync
-from .steps import Step, StepLike, build_step_list
 from .retries import StepWithRetries
+from .exceptions import AsyncStepFailures, RetriesCannotBeUsedInAsync
+from .functional import partition
+from .steps import Step, StepLike, build_step_list
 
 
 def _build_step_coroutine(state, step: Step):
@@ -32,12 +33,11 @@ def _build_compensation_coroutine(state, step: Step):
 
 async def _raise_on_any_failures(steps: Iterable[StepLike], results: Tuple[Any, ...]):
     executed_steps = zip(build_step_list(steps), results)
-    successful_steps = [
-        (step, result)
-        for (step, result) in executed_steps
-        if not isinstance(result, Exception)
-    ]
-    if len(successful_steps) != len(results):
+    successful_steps, failing_steps = partition(
+        executed_steps,
+        lambda i: not isinstance(i[1], Exception)
+    )
+    if len(failing_steps) != 0:
         async_compensations = [
             _build_compensation_coroutine(state, step)
             for (step, state) in successful_steps
@@ -45,7 +45,8 @@ async def _raise_on_any_failures(steps: Iterable[StepLike], results: Tuple[Any, 
         _compensations = await asyncio.gather(
             *async_compensations, return_exceptions=True
         )
-        raise AsyncStepFailures
+        exceptions = [error for (_step, error) in failing_steps]
+        raise AsyncStepFailures(exceptions)
 
 
 def has_async_execute(step: Step) -> bool:

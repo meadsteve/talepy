@@ -62,6 +62,7 @@ async def test_a_transaction_runs_a_single_step_it_wraps():
 
     assert mock_step.actions_taken == ["run execute: 0"]
 
+
 @pytest.mark.asyncio
 async def test_a_transaction_runs_many_steps_it_wraps():
     step_1 = MockCountingStep()
@@ -72,6 +73,7 @@ async def test_a_transaction_runs_many_steps_it_wraps():
     assert step_1.actions_taken == ["run execute: 0"]
     assert step_2.actions_taken == ["run execute: 0"]
     assert step_3.actions_taken == ["run execute: 0"]
+
 
 @pytest.mark.asyncio
 async def test_if_any_step_fails_they_all_get_rolled_back():

@@ -43,6 +43,4 @@ class AsyncStepUsedInSyncTransaction(ValueError, TalepyException):
 
 class RetriesCannotBeUsedInAsync(ValueError, TalepyException):
     def __init__(self) -> None:
-        super().__init__(
-            f"Retries cannot currently be used in `run_async_transaction`"
-        )
+        super().__init__(f"Retries cannot currently be used in `run_async_transaction`")

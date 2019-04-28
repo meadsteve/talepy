@@ -3,7 +3,11 @@ import typing
 import pytest
 
 from talepy import run_transaction
-from talepy.exceptions import AsyncStepFailures, AsyncStepUsedInSyncTransaction, RetriesCannotBeUsedInAsync
+from talepy.exceptions import (
+    AsyncStepFailures,
+    AsyncStepUsedInSyncTransaction,
+    RetriesCannotBeUsedInAsync,
+)
 from talepy.parallel import run_async_transaction
 from talepy.retries import attempt_retries
 from talepy.steps import Step
@@ -164,6 +168,5 @@ async def test_regular_transactions_can_be_async():
 
     with pytest.raises(RetriesCannotBeUsedInAsync):
         await run_async_transaction(
-            steps=[attempt_retries(step_1, times=2)],
-            starting_state=0
+            steps=[attempt_retries(step_1, times=2)], starting_state=0
         )

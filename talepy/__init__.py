@@ -1,6 +1,7 @@
 from typing import Tuple, Any, List, Iterable
 
-from .exceptions import CompensationFailure
+from .parallel import has_async_execute
+from .exceptions import CompensationFailure, AsyncStepUsedInSyncTransaction
 from .retries import StepWithRetries, execute_step_retry
 from .steps import Step, build_step_list, StepLike
 
@@ -31,6 +32,8 @@ def run_transaction(steps: Iterable[StepLike], starting_state=None):
     state = starting_state
     try:
         for step in steps:
+            if has_async_execute(step):
+                raise AsyncStepUsedInSyncTransaction
             state = _execute_step(state, step)
             completed_steps.append((step, state))
         return state

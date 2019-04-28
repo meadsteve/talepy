@@ -12,7 +12,7 @@ setup(
         # We have type information
         'talepy': ['py.typed']
     },
-    version = "0.6.2",
+    version = "0.7.0",
     description = "Distributed Transactions Helper",
     author = "Steve Brazier",
     author_email = "meadsteve@gmail.com",

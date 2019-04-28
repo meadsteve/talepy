@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Generic, Iterable, TypeVar, Union
+from typing import Any, Callable, Generic, Iterable, TypeVar, Union, Awaitable
 
 from .exceptions import InvalidStepDefinition
 from .functional import (
@@ -15,11 +15,11 @@ OutputState = TypeVar("OutputState")
 
 class Step(ABC, Generic[InputState, OutputState]):
     @abstractmethod
-    def execute(self, state: InputState) -> OutputState:
+    def execute(self, state: InputState) -> Union[OutputState, Awaitable[OutputState]]:
         pass
 
     @abstractmethod
-    def compensate(self, state: OutputState) -> None:
+    def compensate(self, state: OutputState) -> Union[None, Awaitable[Any]]:
         pass
 
 

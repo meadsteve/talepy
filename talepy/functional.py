@@ -24,7 +24,9 @@ def is_arity_one_pair(thing: Any) -> bool:
 T = TypeVar("T")
 
 
-def partition(seq: Iterable[T], condition: Callable[[T], bool]) -> Tuple[List[T], List[T]]:
+def partition(
+    seq: Iterable[T], condition: Callable[[T], bool]
+) -> Tuple[List[T], List[T]]:
     truthy = []
     falsy = []
 

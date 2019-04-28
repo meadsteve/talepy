@@ -6,7 +6,8 @@ from talepy import run_transaction
 from talepy.exceptions import (
     AsyncStepFailures,
     AsyncStepUsedInSyncTransaction,
-    RetriesCannotBeUsedInAsync)
+    RetriesCannotBeUsedInAsync,
+)
 from talepy.parallel import run_async_transaction
 from talepy.retries import attempt_retries
 from talepy.steps import Step
@@ -135,10 +136,7 @@ async def test_if_any_step_fails_they_all_get_rolled_back():
     with pytest.raises(AsyncStepFailures) as caught_error:
         await run_async_transaction(steps=[step_1, step_2], starting_state=0)
 
-    assert caught_error.value.inner_exceptions == [
-        step_1.exception,
-        step_2.exception
-    ]
+    assert caught_error.value.inner_exceptions == [step_1.exception, step_2.exception]
 
 
 @pytest.mark.asyncio

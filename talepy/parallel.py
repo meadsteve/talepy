@@ -34,8 +34,7 @@ def _build_compensation_coroutine(state, step: Step):
 async def _raise_on_any_failures(steps: Iterable[StepLike], results: Tuple[Any, ...]):
     executed_steps = zip(build_step_list(steps), results)
     successful_steps, failing_steps = partition(
-        executed_steps,
-        lambda i: not isinstance(i[1], Exception)
+        executed_steps, lambda i: not isinstance(i[1], Exception)
     )
     if len(failing_steps) != 0:
         async_compensations = [

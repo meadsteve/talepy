@@ -1,95 +1,14 @@
-import typing
-from typing import List
-
 import pytest
 
-from talepy import run_transaction, Step
-from talepy.exceptions import AbortRetries, FailuresAfterRetrying
-from talepy.retries import StepWithRetries, attempt_retries
-
-
-class MockRetryStep(StepWithRetries):
-    actions_taken: typing.List[str]
-
-    def __init__(self):
-        self.actions_taken = []
-
-    def compensate(self, counter_state):
-        self.actions_taken.append(f"run compensate: {counter_state}")
-
-    def execute(self, counter_state):
-        raise FirstFail("this step will never succeed")
-
-    def retry(self, state: int, failures: List[Exception]) -> int:
-        self.actions_taken.append(
-            f"ran retry on state {state} after {len(failures)} failures"
-        )
-        return state + 1
-
-
-class MockRetryStepThatRetriesTwice(StepWithRetries):
-    actions_taken: typing.List[str]
-
-    def __init__(self):
-        self.actions_taken = []
-
-    def compensate(self, counter_state):
-        self.actions_taken.append(f"run compensate: {counter_state}")
-
-    def execute(self, counter_state):
-        raise FirstFail("this step will never succeed")
-
-    def retry(self, state: int, failures: List[Exception]) -> int:
-        self.actions_taken.append(
-            f"ran retry on state {state} after {len(failures)} failures"
-        )
-        if len(failures) < 2:
-            raise FirstFail("still failing")
-        return state + 1
-
-
-class MockRetryStepThatRetriesTwiceThenGivesUp(StepWithRetries):
-    actions_taken: typing.List[str]
-
-    def __init__(self):
-        self.actions_taken = []
-
-    def compensate(self, counter_state):
-        self.actions_taken.append(f"run compensate: {counter_state}")
-
-    def execute(self, counter_state):
-        raise FirstFail("this step will never succeed")
-
-    def retry(self, state: int, failures: List[Exception]) -> int:
-        self.actions_taken.append(
-            f"ran retry on state {state} after {len(failures)} failures"
-        )
-        if len(failures) < 2:
-            raise FirstFail("still failing")
-
-        raise AbortRetries("This isn't going to work")
-
-
-class RegularMockStep(Step):
-    actions_taken: typing.List[str]
-
-    def __init__(self):
-        self.actions_taken = []
-
-    def compensate(self, counter_state):
-        self.actions_taken.append(f"run compensate: {counter_state}")
-
-    def execute(self, counter_state):
-        self.actions_taken.append("trying")
-        raise FirstFail("this step will never succeed")
-
-
-class FirstFail(Exception):
-    pass
-
-
-class SubsequentFailure(Exception):
-    pass
+from talepy import run_transaction
+from talepy.exceptions import FailuresAfterRetrying
+from talepy.retries import attempt_retries
+from tests.mocks import (
+    MockRetryStep,
+    MockRetryStepThatRetriesTwice,
+    MockRetryStepThatRetriesTwiceThenGivesUp,
+    RegularMockStep,
+)
 
 
 def test_the_retry_is_run():

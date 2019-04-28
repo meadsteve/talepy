@@ -1,5 +1,3 @@
-import typing
-
 import pytest
 
 from talepy import run_transaction
@@ -10,86 +8,13 @@ from talepy.exceptions import (
 )
 from talepy.parallel import run_async_transaction
 from talepy.retries import attempt_retries
-from talepy.steps import Step
-
-
-class MockCountingStep(Step[int, int]):
-
-    actions_taken: typing.List[str]
-
-    def __init__(self):
-        self.actions_taken = []
-
-    def compensate(self, counter_state):
-        self.actions_taken.append(f"run compensate: {counter_state}")
-
-    def execute(self, counter_state):
-        self.actions_taken.append(f"run execute: {counter_state}")
-        return counter_state + 1
-
-
-class MockAsyncExecuteStep(Step[int, int]):
-
-    actions_taken: typing.List[str]
-
-    def __init__(self):
-        self.actions_taken = []
-
-    def compensate(self, counter_state):
-        self.actions_taken.append(f"run compensate: {counter_state}")
-
-    async def execute(self, counter_state):
-        self.actions_taken.append(f"run execute: {counter_state}")
-        return counter_state + 1
-
-
-class MockAsyncExecuteAndCompensateStep(Step[int, int]):
-
-    actions_taken: typing.List[str]
-
-    def __init__(self):
-        self.actions_taken = []
-
-    async def compensate(self, counter_state):
-        self.actions_taken.append(f"run compensate: {counter_state}")
-
-    async def execute(self, counter_state):
-        self.actions_taken.append(f"run execute: {counter_state}")
-        return counter_state + 1
-
-
-class MockAsyncCompensateStep(Step[int, int]):
-
-    actions_taken: typing.List[str]
-
-    def __init__(self):
-        self.actions_taken = []
-
-    async def compensate(self, counter_state):
-        self.actions_taken.append(f"run compensate: {counter_state}")
-
-    def execute(self, counter_state):
-        self.actions_taken.append(f"run execute: {counter_state}")
-        return counter_state + 1
-
-
-class AlwaysFailException(Exception):
-    pass
-
-
-class AlwaysFailsStep(Step):
-
-    actions_taken: typing.List[str]
-
-    def __init__(self):
-        self.actions_taken = []
-        self.exception = AlwaysFailException("oh no - How shocking")
-
-    def compensate(self, counter_state):
-        pass
-
-    def execute(self, counter_state):
-        raise self.exception
+from tests.mocks import (
+    MockCountingStep,
+    MockAsyncExecuteStep,
+    MockAsyncExecuteAndCompensateStep,
+    MockAsyncCompensateStep,
+    AlwaysFailsStep,
+)
 
 
 @pytest.mark.asyncio

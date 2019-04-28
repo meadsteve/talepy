@@ -1,43 +1,8 @@
-import typing
-
 import pytest
 
 from talepy import run_transaction
 from talepy.exceptions import CompensationFailure
-from talepy.steps import Step
-
-
-class MockCountingStep(Step[int, int]):
-
-    actions_taken: typing.List[str]
-
-    def __init__(self):
-        self.actions_taken = []
-
-    def compensate(self, counter_state):
-        self.actions_taken.append(f"run compensate: {counter_state}")
-
-    def execute(self, counter_state):
-        self.actions_taken.append(f"run execute: {counter_state}")
-        return counter_state + 1
-
-
-class AlwaysFailException(Exception):
-    pass
-
-
-class AlwaysFailsStep(Step):
-
-    actions_taken: typing.List[str]
-
-    def __init__(self):
-        self.actions_taken = []
-
-    def compensate(self, counter_state):
-        pass
-
-    def execute(self, counter_state):
-        raise AlwaysFailException("oh no - How shocking")
+from tests.mocks import MockCountingStep, AlwaysFailsStep, AlwaysFailException
 
 
 def test_a_transaction_runs_a_step_it_wraps():

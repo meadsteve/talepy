@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "919cf68b6cdb96c3506fbf3c4b3e884c110d63e77379a5a68b18d28144aeba1f"
+            "sha256": "eb181c87b304306808171ddd92f7ae2e0114ecb7a341ac712a268b76754a9146"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -82,12 +82,24 @@
             ],
             "version": "==0.14"
         },
+        "glob2": {
+            "hashes": [
+                "sha256:f5b0a686ff21f820c4d3f0c4edd216704cea59d79d00fa337e244a2f2ff83ed6"
+            ],
+            "version": "==0.6"
+        },
         "idna": {
             "hashes": [
                 "sha256:c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407",
                 "sha256:ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c"
             ],
             "version": "==2.8"
+        },
+        "junit-xml": {
+            "hashes": [
+                "sha256:602f1c480a19d64edb452bf7632f76b5f2cb92c1938c6e071dcda8ff9541dc21"
+            ],
+            "version": "==1.8"
         },
         "more-itertools": {
             "hashes": [
@@ -96,6 +108,13 @@
             ],
             "markers": "python_version > '2.7'",
             "version": "==7.0.0"
+        },
+        "mutmut": {
+            "hashes": [
+                "sha256:defd68b6bd1aac8b4fa5bf1e803ea639bf76b3df3e514b0094fc124e1e95e5cf"
+            ],
+            "index": "pypi",
+            "version": "==1.5.0"
         },
         "mypy": {
             "hashes": [
@@ -121,6 +140,13 @@
             ],
             "version": "==0.4.1"
         },
+        "parso": {
+            "hashes": [
+                "sha256:17cc2d7a945eb42c3569d4564cdf49bde221bc2b552af3eca9c1aad517dcdd33",
+                "sha256:2e9574cb12e7112a87253e14e2c380ce312060269d04bd018478a3c92ea9a376"
+            ],
+            "version": "==0.4.0"
+        },
         "pkginfo": {
             "hashes": [
                 "sha256:7424f2c8511c186cd5424bbf31045b77435b37a8d604990b79d4e70d741148bb",
@@ -134,6 +160,12 @@
                 "sha256:84d306a647cc805219916e62aab89caa97a33a1dd8c342e87a37f91073cd4746"
             ],
             "version": "==0.9.0"
+        },
+        "pony": {
+            "hashes": [
+                "sha256:55bb9d4d12029d8c2bbbc7a284970e72225035db7e6370c0a15ec93d1886fe88"
+            ],
+            "version": "==0.7.10"
         },
         "py": {
             "hashes": [
@@ -206,6 +238,18 @@
                 "sha256:e22977e3ebe961f72362f6ddfb9197cc531c9737aaf5f607ef09740c849ecd05"
             ],
             "version": "==4.31.1"
+        },
+        "tri.declarative": {
+            "hashes": [
+                "sha256:e7b9f5b7b88ce63dff11b54661cb359bbbbaaee8b1b38e07721de4bd67921e94"
+            ],
+            "version": "==2.0.0"
+        },
+        "tri.struct": {
+            "hashes": [
+                "sha256:1ab4804ca6e174e346df3110fbe580a1ce347b646c97542ec5f34861e528936a"
+            ],
+            "version": "==2.5.7"
         },
         "twine": {
             "hashes": [

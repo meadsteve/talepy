@@ -1,3 +1,4 @@
+import asyncio
 import typing
 from typing import List
 
@@ -166,3 +167,12 @@ class FirstFail(Exception):
 
 class SubsequentFailure(Exception):
     pass
+
+
+class SlowMoStep(Step):
+    def compensate(self, state):
+        pass
+
+    async def execute(self, state):
+        await asyncio.sleep(1)
+        return "okay"

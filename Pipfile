@@ -11,6 +11,7 @@ setuptools = "*"
 black = "==19.3b0"
 pytest-asyncio = "*"
 mutmut = "*"
+pytest-timeout = "*"
 
 [requires]
 python_version = "3.6"

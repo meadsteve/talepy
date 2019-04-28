@@ -14,6 +14,7 @@ from tests.mocks import (
     MockAsyncExecuteAndCompensateStep,
     MockAsyncCompensateStep,
     AlwaysFailsStep,
+    SlowMoStep,
 )
 
 
@@ -107,3 +108,14 @@ async def test_currently_retries_cant_be_used_async():
         await run_async_transaction(
             steps=[attempt_retries(step_1, times=2)], starting_state=0
         )
+
+
+@pytest.mark.asyncio
+@pytest.mark.timeout(5)
+async def test_steps_are_treated_as_coroutines():
+    # Each slowmo step does an asyncio.sleep for 1 second so 2000
+    # of these can complete quickly if our async runner is working
+    steps = [SlowMoStep() for _ in range(0, 2000)]
+    results = await run_async_transaction(steps=steps, starting_state=0)
+
+    assert all([r == "okay" for r in results])

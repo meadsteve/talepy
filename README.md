@@ -150,7 +150,7 @@ class AsyncBookFlight(Step):
        
 
 await run_transaction(
-    steps=[
+    step_defs=[
         DebitCustomerBalance(), 
         AsyncBookFlight(),
         EmailCustomerDetailsOfBooking()

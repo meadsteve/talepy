@@ -41,10 +41,10 @@ class AsyncStepUsedInSyncTransaction(ValueError, TalepyException):
     def __init__(self) -> None:
         super().__init__(
             f"Async step cannot be called synchronously"
-            f" - try importing from talepy.async_transactions instead"
+            f" - try importing from `talepy.async_transactions` instead"
         )
 
 
 class RetriesCannotBeUsedInConcurrent(ValueError, TalepyException):
     def __init__(self) -> None:
-        super().__init__(f"Retries cannot currently be used in `run_async_transaction`")
+        super().__init__(f"Retries cannot currently be used in `run_concurrent_transaction`")

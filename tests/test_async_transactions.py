@@ -6,7 +6,7 @@ from talepy.exceptions import (
     AsyncStepUsedInSyncTransaction,
     RetriesCannotBeUsedInAsync,
 )
-from talepy.parallel import run_concurrent_transaction
+from talepy.async_transactions import run_concurrent_transaction
 from talepy.retries import attempt_retries
 from tests.mocks import (
     MockCountingStep,

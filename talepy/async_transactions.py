@@ -56,7 +56,7 @@ def has_async_compensate(step: Step) -> bool:
     return inspect.iscoroutinefunction(step.compensate)
 
 
-async def run_async_transaction(
+async def run_concurrent_transaction(
     steps: Iterable[StepLike], starting_state=None
 ) -> Tuple[Any, ...]:
     async_steps = [

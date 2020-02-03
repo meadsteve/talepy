@@ -1,6 +1,6 @@
 from typing import Tuple, Any, List, Iterable
 
-from .parallel import has_async_execute
+from .async_transactions import has_async_execute
 from .exceptions import CompensationFailure, AsyncStepUsedInSyncTransaction
 from .retries import StepWithRetries, execute_step_retry
 from .steps import Step, build_step_list, StepLike

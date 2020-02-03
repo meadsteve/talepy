@@ -127,12 +127,12 @@ all these attempts fail the normal compensation logic will be applied.
 
 ### Async
 
-If you want to make use of `async` in your steps you can use `run_async_transaction`
+If you want to make use of `async` in your steps you can use `run_concurrent_transaction`
 instead. This behaves slightly differently to `run_transaction` as the ordering
 of the steps isn't guaranteed. This means all steps receive the same starting state.
 
 ```python
-from talepy.parallel import run_async_transaction
+from talepy.async_transactions import run_concurrent_transaction
 from talepy.steps import Step
 
 class AsyncBookFlight(Step):
@@ -146,7 +146,7 @@ class AsyncBookFlight(Step):
         pass
        
 
-await run_async_transaction(
+await run_concurrent_transaction(
     steps=[
         DebitCustomerBalance(), 
         AsyncBookFlight(),

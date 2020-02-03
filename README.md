@@ -127,12 +127,15 @@ all these attempts fail the normal compensation logic will be applied.
 
 ### Async
 
-If you want to make use of `async` in your steps you can use `run_async_transaction`
-instead. This behaves slightly differently to `run_transaction` as the ordering
+If you want to make use of `async` in your steps you will need to import `run_transaction`
+from `talepy.async_transactions`. This can be awaited on and allows async steps and
+compensations. In addition you can also `run_concurrent_transaction` where all
+steps will be executed concurrently. The downside here is that the ordering
 of the steps isn't guaranteed. This means all steps receive the same starting state.
 
+#### example
 ```python
-from talepy.parallel import run_async_transaction
+from talepy.async_transactions import run_transaction
 from talepy.steps import Step
 
 class AsyncBookFlight(Step):
@@ -146,7 +149,32 @@ class AsyncBookFlight(Step):
         pass
        
 
-await run_async_transaction(
+await run_transaction(
+    step_defs=[
+        DebitCustomerBalance(), 
+        AsyncBookFlight(),
+        EmailCustomerDetailsOfBooking()
+    ],
+    starting_state={}
+)
+```
+#### Concurrent example
+```python
+from talepy.async_transactions import run_concurrent_transaction
+from talepy.steps import Step
+
+class AsyncBookFlight(Step):
+
+    async def execute(self, state):
+        # do something
+        return state
+        
+    async def compensate(self, state):
+        # revert something
+        pass
+       
+
+await run_concurrent_transaction(
     steps=[
         DebitCustomerBalance(), 
         AsyncBookFlight(),

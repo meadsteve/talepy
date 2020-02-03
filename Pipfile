@@ -13,5 +13,3 @@ pytest-asyncio = "*"
 mutmut = "*"
 pytest-timeout = "*"
 
-[requires]
-python_version = "3.6"

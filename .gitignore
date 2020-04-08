@@ -4,6 +4,9 @@
 talepy.egg-info
 .mutmut-cache
 
+#Pipenv things
+Pipfile.lock
+
 # IDE junk
 .idea/
 

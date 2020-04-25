@@ -1,5 +1,6 @@
 import asyncio
 import inspect
+import random
 from typing import Iterable, Any, Tuple, List
 
 from .retries import StepWithRetries
@@ -59,7 +60,7 @@ async def run_concurrent_transaction(
     step_defs: Iterable[StepLike], starting_state=None
 ) -> Tuple[Any, ...]:
     steps = [_WrappedAsyncStep(step) for step in build_step_list(step_defs)]
-    executions = [step.execute(starting_state) for step in steps]
+    executions = random.shuffle([step.execute(starting_state) for step in steps])
     results = await asyncio.gather(*executions, return_exceptions=True)
     await _raise_on_any_failures(steps, results)
     return results

@@ -1,7 +1,7 @@
 import pytest
 
 from talepy.exceptions import InvalidStepDefinition
-from talepy.steps import InputState, OutputState, Step, build_step
+from talepy.steps import InputState, OutputState, Step, build_step, StepProtocol
 
 
 class StubStep(Step):
@@ -32,7 +32,7 @@ step_like_objects = [
 @pytest.mark.parametrize("step_like_object", step_like_objects)
 def test_things_that_should_turn_into_steps(step_like_object):
     step = build_step(step_like_object)
-    assert isinstance(step, Step)
+    assert isinstance(step, StepProtocol)
 
 
 non_step_like_objects = [

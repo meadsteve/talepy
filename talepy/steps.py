@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Generic, Iterable, TypeVar, Union, Awaitable
+from typing import Any, Callable, Generic, Iterable, TypeVar, Union, Awaitable, runtime_checkable, Protocol
 
 from .exceptions import InvalidStepDefinition
 from .functional import (
@@ -9,11 +9,17 @@ from .functional import (
     is_arity_one_pair,
 )
 
-InputState = TypeVar("InputState")
+InputState = TypeVar("InputState", contravariant=True)
 OutputState = TypeVar("OutputState")
 
 
-class Step(ABC, Generic[InputState, OutputState]):
+@runtime_checkable
+class StepProtocol(Protocol[InputState, OutputState]):
+    def execute(self, state: InputState) -> Union[OutputState, Awaitable[OutputState]]: ...
+    def compensate(self, state: OutputState) -> Union[None, Awaitable[Any]]: ...
+
+
+class Step(ABC, StepProtocol, Generic[InputState, OutputState]):
     @abstractmethod
     def execute(self, state: InputState) -> Union[OutputState, Awaitable[OutputState]]:
         pass
@@ -23,13 +29,14 @@ class Step(ABC, Generic[InputState, OutputState]):
         pass
 
 
+X = TypeVar("X")
 Y = TypeVar("Y")
 
 
-class LambdaStep(Step[Any, Y]):
+class LambdaStep(StepProtocol[X, Y]):
     def __init__(
         self,
-        execute_lambda: Callable[[Any], Y],
+        execute_lambda: Callable[[X], Y],
         compensate_lambda: Callable[[Y], Any] = None,
     ) -> None:
         self.execute_lambda = execute_lambda
@@ -42,10 +49,10 @@ class LambdaStep(Step[Any, Y]):
         self.compensate_lambda(state)
 
 
-StepLike = Union[Step, FunctionPair, PlainStateChangingFunction]
+StepLike = Union[StepProtocol, FunctionPair, PlainStateChangingFunction]
 
 
-def build_step(definition: StepLike) -> Step:
+def build_step(definition: StepLike) -> StepProtocol:
     if isinstance(definition, Step):
         return definition
     if isinstance(definition, tuple) and is_arity_one_pair(definition):
@@ -56,5 +63,5 @@ def build_step(definition: StepLike) -> Step:
     raise InvalidStepDefinition(definition)
 
 
-def build_step_list(step_definitions: Iterable[StepLike]) -> Iterable[Step]:
+def build_step_list(step_definitions: Iterable[StepLike]) -> Iterable[StepProtocol]:
     return map(build_step, step_definitions)

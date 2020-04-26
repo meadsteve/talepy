@@ -4,7 +4,6 @@ from typing import List, TypeVar
 from .exceptions import AbortRetries, FailuresAfterRetrying
 from .steps import Step
 
-
 InputState = TypeVar("InputState")
 OutputState = TypeVar("OutputState")
 

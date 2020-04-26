@@ -3,7 +3,7 @@ from typing import Tuple, Any, List, Iterable
 from .async_transactions import has_async_execute
 from .exceptions import CompensationFailure, AsyncStepUsedInSyncTransaction
 from .retries import StepWithRetries, execute_step_retry
-from .steps import Step, build_step_list, StepLike
+from .steps import build_step_list, StepLike, Step
 
 
 def _compensate_completed_steps(completed_steps: List[Tuple[Step, Any]]):

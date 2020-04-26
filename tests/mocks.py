@@ -2,7 +2,7 @@ import asyncio
 import typing
 from typing import List
 
-from talepy import Step, StepWithRetries
+from talepy import StepWithRetries, Step
 from talepy.exceptions import AbortRetries
 
 

@@ -1,5 +1,13 @@
-from abc import ABC, abstractmethod
-from typing import Any, Callable, Generic, Iterable, TypeVar, Union, Awaitable, runtime_checkable, Protocol
+from typing import (
+    Any,
+    Callable,
+    Iterable,
+    TypeVar,
+    Union,
+    Awaitable,
+    runtime_checkable,
+    Protocol,
+)
 
 from .exceptions import InvalidStepDefinition
 from .functional import (
@@ -14,26 +22,19 @@ OutputState = TypeVar("OutputState")
 
 
 @runtime_checkable
-class StepProtocol(Protocol[InputState, OutputState]):
-    def execute(self, state: InputState) -> Union[OutputState, Awaitable[OutputState]]: ...
-    def compensate(self, state: OutputState) -> Union[None, Awaitable[Any]]: ...
-
-
-class Step(ABC, StepProtocol, Generic[InputState, OutputState]):
-    @abstractmethod
+class Step(Protocol[InputState, OutputState]):
     def execute(self, state: InputState) -> Union[OutputState, Awaitable[OutputState]]:
-        pass
+        ...
 
-    @abstractmethod
     def compensate(self, state: OutputState) -> Union[None, Awaitable[Any]]:
-        pass
+        ...
 
 
 X = TypeVar("X")
 Y = TypeVar("Y")
 
 
-class LambdaStep(StepProtocol[X, Y]):
+class LambdaStep(Step[X, Y]):
     def __init__(
         self,
         execute_lambda: Callable[[X], Y],
@@ -49,10 +50,10 @@ class LambdaStep(StepProtocol[X, Y]):
         self.compensate_lambda(state)
 
 
-StepLike = Union[StepProtocol, FunctionPair, PlainStateChangingFunction]
+StepLike = Union[Step, FunctionPair, PlainStateChangingFunction]
 
 
-def build_step(definition: StepLike) -> StepProtocol:
+def build_step(definition: StepLike) -> Step:
     if isinstance(definition, Step):
         return definition
     if isinstance(definition, tuple) and is_arity_one_pair(definition):
@@ -63,5 +64,5 @@ def build_step(definition: StepLike) -> StepProtocol:
     raise InvalidStepDefinition(definition)
 
 
-def build_step_list(step_definitions: Iterable[StepLike]) -> Iterable[StepProtocol]:
+def build_step_list(step_definitions: Iterable[StepLike]) -> Iterable[Step]:
     return map(build_step, step_definitions)

@@ -12,9 +12,7 @@ def test_compensate_calls_the_second_lambda_with_the_supplied_state():
             self.reverted = state_given
 
     reverter = Reverter()
-    step: Step[str, str] = LambdaStep(
-        lambda x: f"hello {x}", reverter.lambda_func
-    )
+    step: Step[str, str] = LambdaStep(lambda x: f"hello {x}", reverter.lambda_func)
 
     step.compensate("world")
     assert reverter.reverted == "world"

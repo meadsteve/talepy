@@ -5,7 +5,7 @@ from typing import Iterable, Any, Tuple, List
 from .retries import StepWithRetries
 from .exceptions import AsyncStepFailures, RetriesCannotBeUsedInConcurrent
 from .functional import partition
-from .steps import Step, StepLike, build_step_list
+from .steps import StepLike, build_step_list, Step
 
 
 class _WrappedAsyncStep(Step):

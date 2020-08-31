@@ -103,7 +103,7 @@ run_transaction(
 
 ### Automatic retries
 
-You may also want to try a step a few times before giving up. A continence
+You may also want to try a step a few times before giving up. A convinence
 function is provided to help out with this. Starting with the initial example.
 If the hotel booking step is a bit unreliable and we want to try it 3 times:
 

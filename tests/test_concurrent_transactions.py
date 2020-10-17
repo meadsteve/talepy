@@ -115,7 +115,7 @@ async def test_currently_retries_cant_be_used_concurrently():
 async def test_steps_are_treated_as_coroutines():
     # Each slowmo step does an asyncio.sleep for 1 second so 2000
     # of these can complete quickly if our async runner is working
-    steps = [SlowMoStep() for _ in range(0, 2000)]
+    steps = [SlowMoStep() for _ in range(2000)]
     results = await run_concurrent_transaction(steps, starting_state=0)
 
-    assert all([r == "okay" for r in results])
+    assert all(r == "okay" for r in results)
